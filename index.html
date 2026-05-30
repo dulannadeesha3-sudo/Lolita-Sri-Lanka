@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lolita - Premium Sri Lankan Fashion Boutique</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Tailwind Config -->
+    <script src="config.js"></script>
+</head>
+<body class="text-neutral-800 selection:bg-brand-200 selection:text-brand-900">
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="bg-brand-900 text-brand-100 text-xs py-2 px-4 text-center tracking-wider uppercase font-semibold">
+        <span>✨ Welcome to Lolita Sri Lanka - Use Code <span class="text-white underline font-bold">LOLITA15</span> for 15% off your first order! ✨</span>
+    </div>
+
+    <!-- MAIN HEADER -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-brand-100 shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-brand-800 hover:text-brand-500 focus:outline-none" aria-label="Menu">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+
+                <a href="#" class="flex flex-col items-center justify-center transition-transform hover:scale-105">
+                    <svg class="w-6 h-6 text-accent mb-0.5" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M2 19h20v2H2zm1-5l2.5-4 3.5 3 3.5-7 3.5 7 3.5-3 2.5 4H3z" />
+                    </svg>
+                    <span class="serif-font text-3xl font-bold tracking-widest text-brand-800 leading-none">Lōlita</span>
+                    <span class="text-[9px] tracking-[0.3em] uppercase text-brand-500 font-semibold mt-1">Est. 2024</span>
+                </a>
+
+                <nav class="hidden lg:flex space-x-8">
+                    <a href="#" onclick="filterCategory('all')" class="text-brand-900 hover:text-brand-500 font-semibold tracking-wide transition-colors">All Collections</a>
+                    <a href="#" onclick="filterCategory('sarees')" class="text-brand-900 hover:text-brand-500 font-semibold tracking-wide transition-colors">Sarees</a>
+                    <a href="#" onclick="filterCategory('dresses')" class="text-brand-900 hover:text-brand-500 font-semibold tracking-wide transition-colors">Resort & Dresses</a>
+                    <a href="#" onclick="filterCategory('kurtis')" class="text-brand-900 hover:text-brand-500 font-semibold tracking-wide transition-colors">Kurtas & Kurtis</a>
+                    <a href="#" onclick="filterCategory('accessories')" class="text-brand-900 hover:text-brand-500 font-semibold tracking-wide transition-colors">Jewelry & Accs</a>
+                </nav>
+
+                <div class="flex items-center space-x-4 sm:space-x-6">
+                    <div class="relative hidden md:block">
+                        <input type="text" id="searchInput" oninput="searchProducts()" placeholder="Search styles..." class="w-64 bg-vintage border border-brand-200 text-sm rounded-full py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent transition-all">
+                        <span class="absolute right-3 top-2.5 text-brand-400"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    </div>
+
+                    <button onclick="toggleMobileSearch()" class="md:hidden text-brand-800 hover:text-brand-500 text-lg">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+
+                    <button onclick="showWishlistModal()" class="relative text-brand-800 hover:text-brand-500 text-lg transition-transform hover:scale-110">
+                        <i class="fa-regular fa-heart"></i>
+                        <span id="wishlistCountBadge" class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold font-sans">0</span>
+                    </button>
+
+                    <button onclick="toggleCartDrawer()" class="relative text-brand-800 hover:text-brand-500 text-lg transition-transform hover:scale-110">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span id="cartCountBadge" class="absolute -top-1.5 -right-1.5 bg-brand-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold font-sans">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Search Bar -->
+    <div id="mobileSearchBar" class="hidden md:hidden bg-white px-4 py-3 border-b border-brand-100 transition-all">
+        <div class="relative">
+            <input type="text" id="mobileSearchInput" oninput="searchProductsMobile()" placeholder="Search styles..." class="w-full bg-vintage border border-brand-200 text-sm rounded-full py-2.5 pl-4 pr-10 focus:outline-none">
+            <span class="absolute right-3 top-3 text-brand-400"><i class="fa-solid fa-magnifying-glass"></i></span>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs hidden transition-opacity duration-300">
+        <div class="w-80 bg-white h-full p-6 shadow-2xl flex flex-col justify-between transform -translate-x-full transition-transform duration-300" id="mobileMenuContent">
+            <div>
+                <div class="flex items-center justify-between pb-6 border-b border-brand-100">
+                    <span class="serif-font text-2xl font-bold tracking-widest text-brand-800">Lōlita</span>
+                    <button onclick="toggleMobileMenu()" class="text-brand-800 text-2xl"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="mt-8 flex flex-col space-y-5 text-lg font-medium text-brand-900">
+                    <a href="#" onclick="filterCategoryMobile('all')" class="hover:text-brand-500 transition-colors py-1"><i class="fa-solid fa-border-all mr-3 text-brand-400"></i>All Collections</a>
+                    <a href="#" onclick="filterCategoryMobile('sarees')" class="hover:text-brand-500 transition-colors py-1"><i class="fa-solid fa-vest mr-3 text-brand-400"></i>Sarees</a>
+                    <a href="#" onclick="filterCategoryMobile('dresses')" class="hover:text-brand-500 transition-colors py-1"><i class="fa-solid fa-person-dress mr-3 text-brand-400"></i>Resort & Dresses</a>
+                    <a href="#" onclick="filterCategoryMobile('kurtis')" class="hover:text-brand-500 transition-colors py-1"><i class="fa-solid fa-shirt mr-3 text-brand-400"></i>Kurtas & Kurtis</a>
+                    <a href="#" onclick="filterCategoryMobile('accessories')" class="hover:text-brand-500 transition-colors py-1"><i class="fa-solid fa-gem mr-3 text-brand-400"></i>Jewelry & Accs</a>
+                </div>
+            </div>
+            <div class="pt-6 border-t border-brand-100 text-sm text-brand-500">
+                <p class="mb-2"><i class="fa-solid fa-phone mr-2"></i> +94 11 234 5678</p>
+                <p><i class="fa-solid fa-envelope mr-2"></i> colombo@lolitaboutique.com</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- HERO SLIDER -->
+    <section class="relative overflow-hidden bg-brand-50 h-[380px] sm:h-[480px] md:h-[600px]">
+        <div class="absolute inset-0 flex transition-transform duration-700 ease-in-out" id="heroSlider">
+            
+            <div class="min-w-full h-full relative flex items-center">
+                <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1600&q=80" alt="Saree Banner" class="absolute inset-0 w-full h-full object-cover object-top opacity-85 brightness-95">
+                <div class="absolute inset-0 bg-gradient-to-r from-brand-900/60 via-brand-950/40 to-transparent"></div>
+                <div class="relative max-w-7xl mx-auto px-6 sm:px-12 w-full text-white z-10">
+                    <span class="bg-brand-500/90 text-brand-50 text-[10px] sm:text-xs tracking-[0.25em] uppercase px-3 py-1.5 rounded-full font-bold">New Arrival</span>
+                    <h1 class="serif-font text-3xl sm:text-5xl md:text-6.5xl font-bold mt-4 leading-tight">Island Elegance:<br>Handcrafted Heritage Silks</h1>
+                    <p class="text-brand-200 mt-4 text-xs sm:text-base max-w-md tracking-wide">Premium silk sarees woven exclusively for unforgettable Sri Lankan celebrations.</p>
+                    <div class="mt-8">
+                        <button onclick="scrollToProducts()" class="bg-white text-brand-900 font-bold px-6 sm:px-8 py-3 rounded-full hover:bg-brand-500 hover:text-white shadow-lg transition-all duration-300 uppercase tracking-wider text-xs">Explore Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="min-w-full h-full relative flex items-center">
+                <img src="https://images.unsplash.com/photo-1596783074918-c84cb06531ca?auto=format&fit=crop&w=1600&q=80" alt="Dresses Banner" class="absolute inset-0 w-full h-full object-cover object-center opacity-85 brightness-95">
+                <div class="absolute inset-0 bg-gradient-to-r from-brand-900/60 via-brand-950/40 to-transparent"></div>
+                <div class="relative max-w-7xl mx-auto px-6 sm:px-12 w-full text-white z-10">
+                    <span class="bg-brand-500/90 text-brand-50 text-[10px] sm:text-xs tracking-[0.25em] uppercase px-3 py-1.5 rounded-full font-bold">Tropical Resort Wear</span>
+                    <h1 class="serif-font text-3xl sm:text-5xl md:text-6.5xl font-bold mt-4 leading-tight">Lolita Designer Linens<br>Pure Breathable Comfort</h1>
+                    <p class="text-brand-200 mt-4 text-xs sm:text-base max-w-md tracking-wide">Flowing silhouettes designed for the tropical climate with premium finishes.</p>
+                    <div class="mt-8">
+                        <button onclick="scrollToProducts()" class="bg-white text-brand-900 font-bold px-6 sm:px-8 py-3 rounded-full hover:bg-brand-500 hover:text-white shadow-lg transition-all duration-300 uppercase tracking-wider text-xs">Shop Dresses</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/80 text-brand-900 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center backdrop-blur-xs transition-all z-20">
+            <i class="fa-solid fa-chevron-left text-lg"></i>
+        </button>
+        <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/80 text-brand-900 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center backdrop-blur-xs transition-all z-20">
+            <i class="fa-solid fa-chevron-right text-lg"></i>
+        </button>
+
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex space-x-2 z-20">
+            <button onclick="setSlide(0)" class="w-3 h-3 rounded-full bg-white transition-all duration-300" id="dot0"></button>
+            <button onclick="setSlide(1)" class="w-3 h-3 rounded-full bg-white/50 transition-all duration-300" id="dot1"></button>
+        </div>
+    </section>
+
+    <!-- BENEFITS SECTION -->
+    <section class="bg-white py-8 border-b border-brand-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                <div class="p-4 flex flex-col items-center border-r last:border-0 border-brand-100">
+                    <div class="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center text-brand-500 text-xl mb-3"><i class="fa-solid fa-truck-fast"></i></div>
+                    <h3 class="font-bold text-sm uppercase tracking-wider text-brand-900">Island-wide Delivery</h3>
+                    <p class="text-xs text-brand-500 mt-1">Prompt delivery across Sri Lanka</p>
+                </div>
+                <div class="p-4 flex flex-col items-center border-r last:border-0 border-brand-100">
+                    <div class="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center text-brand-500 text-xl mb-3"><i class="fa-solid fa-rotate"></i></div>
+                    <h3 class="font-bold text-sm uppercase tracking-wider text-brand-900">Easy Returns</h3>
+                    <p class="text-xs text-brand-500 mt-1">7-day hassle-free exchanges</p>
+                </div>
+                <div class="p-4 flex flex-col items-center border-r last:border-0 border-brand-100">
+                    <div class="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center text-brand-500 text-xl mb-3"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3 class="font-bold text-sm uppercase tracking-wider text-brand-900">100% Secure</h3>
+                    <p class="text-xs text-brand-500 mt-1">SSL Encrypted local payments</p>
+                </div>
+                <div class="p-4 flex flex-col items-center">
+                    <div class="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center text-brand-500 text-xl mb-3"><i class="fa-solid fa-gift"></i></div>
+                    <h3 class="font-bold text-sm uppercase tracking-wider text-brand-900">Premium Packaging</h3>
+                    <p class="text-xs text-brand-500 mt-1">Signature luxury gift boxes</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCTS SECTION -->
+    <main id="productsSection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+        
+        <div class="text-center max-w-xl mx-auto mb-12">
+            <span class="text-brand-500 text-xs sm:text-sm tracking-[0.25em] uppercase font-bold">Lolita Signature Collection</span>
+            <h2 class="serif-font text-3xl sm:text-4xl font-bold mt-2 text-brand-900">Tradition Meets Tropical Modernity</h2>
+            <div class="w-16 h-1 bg-brand-400 mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-brand-100 pb-5 gap-4">
+            
+            <div class="flex space-x-2 overflow-x-auto no-scrollbar pb-2 w-full md:w-auto">
+                <button onclick="filterCategory('all')" id="btn-all" class="filter-btn px-5 py-2 rounded-full text-sm font-semibold tracking-wide transition-all bg-brand-500 text-white shadow-sm">All</button>
+                <button onclick="filterCategory('sarees')" id="btn-sarees" class="filter-btn px-5 py-2 rounded-full text-sm font-semibold tracking-wide transition-all bg-white text-brand-800 hover:bg-brand-50 border border-brand-200">Sarees</button>
+                <button onclick="filterCategory('dresses')" id="btn-dresses" class="filter-btn px-5 py-2 rounded-full text-sm font-semibold tracking-wide transition-all bg-white text-brand-800 hover:bg-brand-50 border border-brand-200">Dresses</button>
+                <button onclick="filterCategory('kurtis')" id="btn-kurtis" class="filter-btn px-5 py-2 rounded-full text-sm font-semibold tracking-wide transition-all bg-white text-brand-800 hover:bg-brand-50 border border-brand-200">Kurtas & Kurtis</button>
+                <button onclick="filterCategory('accessories')" id="btn-accessories" class="filter-btn px-5 py-2 rounded-full text-sm font-semibold tracking-wide transition-all bg-white text-brand-800 hover:bg-brand-50 border border-brand-200">Accessories</button>
+            </div>
+
+            <div class="flex items-center justify-between w-full md:w-auto gap-4">
+                <span class="text-xs text-brand-500 font-semibold" id="productCountText">Showing 8 premium items</span>
+                <select id="sortSelect" onchange="sortProducts()" class="bg-white border border-brand-200 rounded-lg py-1.5 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-brand-400">
+                    <option value="featured">Featured Styles</option>
+                    <option value="low-to-high">Price: Low to High</option>
+                    <option value="high-to-low">Price: High to Low</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8" id="productGrid">
+        </div>
+
+    </main>
+
+    <!-- STORY SECTION -->
+    <section class="bg-brand-900 text-white py-16 md:py-24 my-12 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80" alt="background texture" class="w-full h-full object-cover">
+        </div>
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <span class="text-accent text-xs sm:text-sm tracking-[0.3em] uppercase font-bold">Our Colombo Atelier</span>
+            <h2 class="serif-font text-3xl sm:text-5xl font-bold mt-4 leading-tight text-brand-50">Crafted Beyond Words</h2>
+            <p class="text-brand-200 mt-6 leading-relaxed text-sm sm:text-base max-w-2xl mx-auto">
+                At Lolita, every weave and contour celebrates luxury and timeless island grace. Melding Sri Lankan heritage with modern design, we create silhouettes that emphasize sustainable tropical luxury.
+            </p>
+            <div class="mt-8 flex justify-center space-x-4">
+                <div class="text-center px-4">
+                    <h4 class="serif-font text-2xl sm:text-4xl font-bold text-accent">5,000+</h4>
+                    <p class="text-xs text-brand-300 uppercase tracking-widest mt-1">Happy Clients</p>
+                </div>
+                <div class="h-10 w-[1px] bg-brand-700 my-auto"></div>
+                <div class="text-center px-4">
+                    <h4 class="serif-font text-2xl sm:text-4xl font-bold text-accent">100%</h4>
+                    <p class="text-xs text-brand-300 uppercase tracking-widest mt-1">Premium Fabrics</p>
+                </div>
+                <div class="h-10 w-[1px] bg-brand-700 my-auto"></div>
+                <div class="text-center px-4">
+                    <h4 class="serif-font text-2xl sm:text-4xl font-bold text-accent">Est.</h4>
+                    <p class="text-xs text-brand-300 uppercase tracking-widest mt-1">Since 2024</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CUSTOMER REVIEWS (Social Proof) -->
+    <section class="py-16 bg-white border-t border-rosegold-100">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="serif-title text-3xl font-bold text-gray-950">Loved By Our Patrons</h2>
+                <p class="text-rosegold-500 text-xs tracking-widest uppercase mt-1">Real reviews from verified buyers</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-luxury-cream p-8 border border-rosegold-100">
+                    <div class="flex text-rosegold-400 mb-4">
+                        <span>★★★★★</span>
+                    </div>
+                    <p class="text-sm text-gray-600 italic">"I bought a few designer kurtis from Lolita. The fabric is incredibly soft and premium. It gives a luxurious feel!"</p>
+                    <p class="font-bold text-xs uppercase tracking-wider mt-4 text-gray-800">- Anita S.</p>
+                </div>
+                <div class="bg-luxury-cream p-8 border border-rosegold-100">
+                    <div class="flex text-rosegold-400 mb-4">
+                        <span>★★★★★</span>
+                    </div>
+                    <p class="text-sm text-gray-600 italic">"The rose gold zari embroidery on my wedding saree matched the elegant rose gold tone of the brand logo beautifully. Absolute masterpiece."</p>
+                    <p class="font-bold text-xs uppercase tracking-wider mt-4 text-gray-800">- Pooja M.</p>
+                </div>
+                <div class="bg-luxury-cream p-8 border border-rosegold-100">
+                    <div class="flex text-rosegold-400 mb-4">
+                        <span>★★★★★</span>
+                    </div>
+                    <p class="text-sm text-gray-600 italic">"Super fast delivery and elegant premium packaging. The online support team is extremely cooperative. Best luxury experience!"</p>
+                    <p class="font-bold text-xs uppercase tracking-wider mt-4 text-gray-800">- Rupesh D.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEWSLETTER -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+        <div class="bg-white rounded-3xl p-8 md:p-16 border border-brand-100 shadow-sm max-w-4xl mx-auto">
+            <span class="text-brand-500 text-xs sm:text-sm tracking-[0.25em] uppercase font-bold">Stay Updated</span>
+            <h2 class="serif-font text-2.5xl sm:text-3.5xl font-bold mt-2 text-brand-900">Join the Lolita Insider Club</h2>
+            <p class="text-brand-500 text-xs sm:text-sm mt-3 max-w-md mx-auto">Subscribe for exclusive invitations to new collection previews, fashion pop-ups, and special offers.</p>
+            <form onsubmit="subscribeNewsletter(event)" class="mt-8 flex flex-col sm:flex-row max-w-md mx-auto gap-3">
+                <input type="email" required placeholder="Enter your email address..." class="flex-grow bg-vintage border border-brand-200 rounded-full px-5 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400">
+                <button type="submit" class="bg-brand-500 hover:bg-brand-600 text-white px-8 py-3 rounded-full text-sm font-bold tracking-wide transition-all shadow-md">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-950 text-brand-200 pt-16 pb-8 border-t border-brand-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 pb-12 border-b border-brand-900">
+                
+                <div class="space-y-4">
+                    <a href="#" class="flex flex-col items-start transition-transform hover:scale-102">
+                        <svg class="w-6 h-6 text-accent mb-0.5" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M2 19h20v2H2zm1-5l2.5-4 3.5 3 3.5-7 3.5 7 3.5-3 2.5 4H3z" />
+                        </svg>
+                        <span class="serif-font text-2.5xl font-bold tracking-widest text-white leading-none">Lōlita</span>
+                        <span class="text-[8px] tracking-[0.3em] uppercase text-brand-400 font-semibold mt-1">Est. 2024</span>
+                    </a>
+                    <p class="text-sm text-brand-400">Premium design, refined silhouettes, and bespoke fashion.</p>
+                    <div class="flex space-x-4 pt-2">
+                        <a href="#" class="w-8 h-8 rounded-full bg-brand-900 flex items-center justify-center hover:bg-brand-500 transition-colors"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-brand-900 flex items-center justify-center hover:bg-brand-500 transition-colors"><i class="fa-brands fa-instagram text-sm"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-brand-900 flex items-center justify-center hover:bg-brand-500 transition-colors"><i class="fa-brands fa-pinterest-p text-sm"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-white font-bold tracking-wider uppercase text-sm mb-4">Collections</h3>
+                    <ul class="space-y-2 text-sm text-brand-400">
+                        <li><a href="#" onclick="filterCategory('sarees')" class="hover:text-accent transition-colors">Exquisite Sarees</a></li>
+                        <li><a href="#" onclick="filterCategory('dresses')" class="hover:text-accent transition-colors">Premium Resort Dresses</a></li>
+                        <li><a href="#" onclick="filterCategory('kurtis')" class="hover:text-accent transition-colors">Designer Kurtis</a></li>
+                        <li><a href="#" onclick="filterCategory('accessories')" class="hover:text-accent transition-colors">Fine Accessories</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-white font-bold tracking-wider uppercase text-sm mb-4">Customer Care</h3>
+                    <ul class="space-y-2 text-sm text-brand-400">
+                        <li><a href="#" class="hover:text-accent transition-colors">Our Atelier Story</a></li>
+                        <li><a href="#" class="hover:text-accent transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-accent transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-accent transition-colors">Shipping & Returns</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-white font-bold tracking-wider uppercase text-sm mb-4">Colombo Store</h3>
+                    <ul class="space-y-3 text-sm text-brand-400">
+                        <li class="flex items-start"><i class="fa-solid fa-location-dot mt-1 mr-3 text-brand-500"></i><span>12, Flower Road, Colombo 07, Sri Lanka</span></li>
+                        <li class="flex items-center"><i class="fa-solid fa-phone mr-3 text-brand-500"></i><span>+94 11 234 5678</span></li>
+                        <li class="flex items-center"><i class="fa-solid fa-envelope mr-3 text-brand-500"></i><span>colombo@lolitaboutique.com</span></li>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-brand-500 gap-4">
+                <p>&copy; 2026 Lolita Boutique Sri Lanka. All Rights Reserved.</p>
+                <div class="flex space-x-4 items-center">
+                    <img src="https://img.icons8.com/color/48/000000/visa.png" alt="Visa" class="h-6 w-auto grayscale opacity-70 hover:grayscale-0 transition-all">
+                    <img src="https://img.icons8.com/color/48/000000/mastercard.png" alt="MasterCard" class="h-6 w-auto grayscale opacity-70 hover:grayscale-0 transition-all">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WISHLIST MODAL -->
+    <div id="wishlistModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="closeWishlistModal()" class="absolute right-4 top-4 text-brand-800 hover:text-brand-500 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="serif-font text-2xl font-bold text-brand-900 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-heart text-red-500 animate-pulse"></i> Your Favorites
+            </h3>
+            <div id="wishlistItemsContainer" class="space-y-4 max-h-[60vh] overflow-y-auto pr-1">
+            </div>
+        </div>
+    </div>
+
+    <!-- QUICK VIEW MODAL -->
+    <div id="quickViewModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative" id="quickViewContent">
+        </div>
+    </div>
+
+    <!-- CART DRAWER -->
+    <div id="cartDrawer" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden transition-opacity duration-300">
+        <div class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl flex flex-col justify-between transform translate-x-full transition-transform duration-300" id="cartDrawerContent">
+            
+            <div class="p-6 border-b border-brand-100 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-bag-shopping text-brand-500 text-xl"></i>
+                    <h3 class="font-bold text-lg text-brand-900 serif-font">Your Shopping Bag</h3>
+                </div>
+                <button onclick="toggleCartDrawer()" class="text-brand-800 text-xl hover:text-brand-500"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="flex-grow p-6 overflow-y-auto space-y-6" id="cartDrawerItems">
+            </div>
+
+            <div class="p-6 border-t border-brand-100 bg-brand-50/50 space-y-4">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-brand-500">Promo Discount (LOLITA15):</span>
+                    <span id="discountText" class="text-green-600 font-semibold">- LKR 0.00</span>
+                </div>
+                <div class="flex justify-between items-center border-t border-brand-100 pt-4">
+                    <span class="font-bold text-brand-900">Total Price:</span>
+                    <span id="cartTotalPrice" class="font-bold text-xl text-brand-900">LKR 0.00</span>
+                </div>
+                <button onclick="openCheckoutModal()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 rounded-full text-center tracking-wider uppercase transition-all shadow-md">Proceed to Checkout</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl relative text-center">
+            <button onclick="closeCheckoutModal()" class="absolute right-4 top-4 text-brand-800 hover:text-brand-500 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3 class="serif-font text-2xl font-bold text-brand-900">Transaction Successful!</h3>
+            <p class="text-brand-500 text-sm mt-2">Thank you for shopping with Lolita Sri Lanka.</p>
+            
+            <div class="bg-vintage border border-brand-100 rounded-2xl p-4 my-6 text-left text-xs space-y-2">
+                <div class="flex justify-between"><span class="text-brand-500">Order Reference:</span><span class="font-bold text-brand-800">#LOL-LK-2026-9871</span></div>
+                <div class="flex justify-between"><span class="text-brand-500">Customer Name:</span><span class="font-bold text-brand-800">Premium Valued Guest</span></div>
+                <div class="flex justify-between"><span class="text-brand-500">Delivery Location:</span><span class="font-bold text-brand-800">Colombo, Sri Lanka</span></div>
+                <div class="flex justify-between border-t border-brand-100 pt-2 font-bold"><span class="text-brand-800">Total Paid Amount:</span><span class="text-brand-900 text-sm" id="checkoutPaidAmount">LKR 0.00</span></div>
+            </div>
+
+            <button onclick="closeCheckoutModal()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 rounded-full transition-all">Continue Shopping</button>
+        </div>
+    </div>
+
+
+    <!-- AI STYLE ASSISTANT -->
+    <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+        <!-- Floating Chatbox -->
+        <div id="aiChatbox" class="bg-white rounded-3xl shadow-2xl border border-brand-200 w-80 sm:w-96 h-[480px] flex flex-col justify-between overflow-hidden hidden mb-4 transition-all duration-300">
+            <!-- Header -->
+            <div class="bg-brand-900 text-white p-4 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-brand-500 flex items-center justify-center text-white text-sm relative">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border border-white pulse-element"></span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm">Lolita AI Style Assistant</h4>
+                        <span class="text-[9px] text-brand-300">Colombo Atelier Digital Stylist</span>
+                    </div>
+                </div>
+                <button onclick="toggleAiChat()" class="text-white hover:text-accent"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <!-- Chat Messages -->
+            <div id="chatMessages" class="flex-grow p-4 overflow-y-auto space-y-4 bg-vintage/50 text-sm">
+                <!-- Initial Welcome Message -->
+                <div class="flex items-start space-x-2.5">
+                    <div class="w-7 h-7 rounded-full bg-brand-200 flex items-center justify-center text-brand-900 text-xs"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-xs text-brand-800 max-w-[80%]">
+                        Hello! Welcome to Lolita Sri Lanka. I am your personal digital stylist. Tell me about the occasion or styles you are looking for today!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input form -->
+            <form onsubmit="sendAiMessage(event)" class="p-3 border-t border-brand-100 bg-white flex gap-2">
+                <input type="text" id="aiInput" required placeholder="Ask me for fashion recommendations..." class="flex-grow bg-vintage text-sm border border-brand-200 rounded-full px-4 py-2 focus:outline-none focus:ring-1 focus:ring-brand-400">
+                <button type="submit" class="bg-brand-500 hover:bg-brand-600 text-white w-9 h-9 rounded-full flex items-center justify-center shadow-md"><i class="fa-solid fa-paper-plane text-sm"></i></button>
+            </form>
+        </div>
+
+        <!-- Chat Activation Button with Label -->
+        <div class="flex items-center space-x-3">
+            <span class="bg-brand-900 text-white text-xs px-3 py-1.5 rounded-full font-semibold shadow-md border border-brand-700 hidden sm:inline pulse-element">Lolita AI Assistant</span>
+            <button onclick="toggleAiChat()" class="bg-brand-500 hover:bg-brand-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 relative" aria-label="Chat with AI">
+                <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
+                <span class="absolute top-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border border-white pulse-element"></span>
+            </button>
+        </div>
+    </div>
+
+
+    <!-- TOAST NOTIFICATIONS -->
+    <div id="toastContainer" class="fixed bottom-6 left-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- External JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
