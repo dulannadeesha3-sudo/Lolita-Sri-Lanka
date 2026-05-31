@@ -24,10 +24,7 @@ tailwind.config = {
             fontFamily: {
                 serif: ['Playfair Display', 'serif'],
                 sans: ['Plus Jakarta Sans', 'sans-serif'],
-            },
-            aspectRatio: {
-                '3/4': '3 / 4',
-            },
+            }
         }
     }
 }
