@@ -612,6 +612,410 @@ function addQuickViewToCart(productId) {
 }
 
 // ========================================
+// CUSTOMER REVIEWS SECTION
+// ========================================
+
+const reviewsDatabase = [
+    {
+        id: 1,
+        name: "Anita S.",
+        title: "Verified Buyer",
+        location: "Colombo",
+        rating: 5,
+        headline: "Absolutely stunning saree!",
+        text: "The Imperial Silk Saree exceeded all my expectations. The fabric quality is premium and the gold zari work is impeccable. Perfect for my sister's wedding ceremony.",
+        avatar: "AS",
+        date: "2 weeks ago",
+        helpful: 142,
+        product: "Imperial Handcrafted Pure Silk Saree"
+    },
+    {
+        id: 2,
+        name: "Pooja M.",
+        title: "Wedding Shopper",
+        location: "Kandy",
+        rating: 5,
+        headline: "A masterpiece of elegance",
+        text: "The rose gold zari embroidery on my wedding saree matched perfectly. The craftsmanship is exceptional and delivery was incredibly fast. Lolita truly understands luxury!",
+        avatar: "PM",
+        date: "1 month ago",
+        helpful: 89,
+        product: "Heritage Sri Lankan Silk Batik Saree"
+    },
+    {
+        id: 3,
+        name: "Rupesh D.",
+        title: "Loyal Customer",
+        location: "Galle",
+        rating: 5,
+        headline: "Premium experience from start to finish",
+        text: "Super fast delivery and elegant premium packaging. The online support team is extremely cooperative and helpful. Best luxury fashion experience ever!",
+        avatar: "RD",
+        date: "3 weeks ago",
+        helpful: 156,
+        product: "Elegant Ivory Floral Linen Dress"
+    },
+    {
+        id: 4,
+        name: "Kavya N.",
+        title: "Fashion Enthusiast",
+        location: "Negombo",
+        rating: 4,
+        headline: "Stunning quality and design",
+        text: "The saree colors are vibrant and the weaving is impeccable. I've already recommended Lolita to all my friends. Worth every penny spent!",
+        avatar: "KN",
+        date: "4 days ago",
+        helpful: 67,
+        product: "Heritage Sri Lankan Silk Batik Saree"
+    },
+    {
+        id: 5,
+        name: "Meera T.",
+        title: "Party Planner",
+        location: "Colombo",
+        rating: 5,
+        headline: "Perfect for special occasions",
+        text: "The kurtis drape beautifully and the embroidery work is incredibly detailed. I purchased multiple pieces for my event clients and they loved it!",
+        avatar: "MT",
+        date: "1 week ago",
+        helpful: 98,
+        product: "Kashmiri Aari Intricate Kurti"
+    },
+    {
+        id: 6,
+        name: "Deepak L.",
+        title: "Gift Buyer",
+        location: "Matara",
+        rating: 5,
+        headline: "Luxury gift that impressed everyone",
+        text: "Bought sarees for my wife and mother. Both loved the quality and design. The packaging made it feel extra special. Will definitely shop again!",
+        avatar: "DL",
+        date: "2 days ago",
+        helpful: 45,
+        product: "Imperial Handcrafted Pure Silk Saree"
+    },
+    {
+        id: 7,
+        name: "Nimmi K.",
+        title: "Regular Customer",
+        location: "Colombo",
+        rating: 5,
+        headline: "Best online fashion store in SL",
+        text: "The variety and quality of collections are unmatched. Customer service is fantastic. I've been shopping here for months and never disappointed!",
+        avatar: "NK",
+        date: "1 week ago",
+        helpful: 123,
+        product: "Designer Handblock Print Kurti Set"
+    },
+    {
+        id: 8,
+        name: "Samantha R.",
+        title: "Verified Buyer",
+        location: "Colombo",
+        rating: 4,
+        headline: "Great quality, highly recommended",
+        text: "The Ivory Linen Dress is so comfortable for this weather. The fabric breathes beautifully and looks elegant. Very happy with my purchase!",
+        avatar: "SR",
+        date: "3 days ago",
+        helpful: 76,
+        product: "Elegant Ivory Floral Linen Dress"
+    },
+    {
+        id: 9,
+        name: "Harini G.",
+        title: "Jewelry Lover",
+        location: "Colombo",
+        rating: 5,
+        headline: "Stunning accessory collection",
+        text: "The Kundan jhumkas are absolutely beautiful and well-crafted. They arrive in a lovely box. Perfect for enhancing any traditional outfit!",
+        avatar: "HG",
+        date: "5 days ago",
+        helpful: 52,
+        product: "Traditional Kundan Filigree Jhumkas"
+    }
+];
+
+let displayedReviews = 3;
+let helpfulTracking = {};
+
+// Initialize Reviews on Page Load
+window.addEventListener('DOMContentLoaded', function() {
+    renderReviews(displayedReviews);
+    initializeHelpfulTracking();
+    updateReviewStats();
+});
+
+// Render Reviews
+function renderReviews(count) {
+    const reviewsGrid = document.getElementById('reviewsGrid');
+    if (!reviewsGrid) return;
+    
+    reviewsGrid.innerHTML = '';
+
+    const reviewsToDisplay = reviewsDatabase.slice(0, count);
+
+    reviewsToDisplay.forEach((review, index) => {
+        const reviewCard = document.createElement('div');
+        reviewCard.className = 'review-card';
+        
+        const starClass = `${review.rating}-stars`;
+
+        reviewCard.innerHTML = `
+            <div>
+                <div class="review-meta">
+                    <div class="star-rating ${starClass}"></div>
+                    <span class="text-brand-400 font-semibold">${review.date}</span>
+                </div>
+                
+                <span class="verified-badge">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                    </svg>
+                    Verified Purchase
+                </span>
+
+                <h4 class="review-headline">${review.headline}</h4>
+                <p class="review-text">${review.text}</p>
+            </div>
+
+            <div>
+                <div class="customer-info">
+                    <div class="customer-avatar">${review.avatar}</div>
+                    <div>
+                        <div class="customer-name">${review.name}</div>
+                        <div class="customer-title">${review.title}</div>
+                    </div>
+                </div>
+
+                <div class="review-actions">
+                    <button onclick="markHelpful(${review.id})" id="helpful-btn-${review.id}" class="review-action-btn" title="Mark as helpful">
+                        👍 <span id="helpful-count-${review.id}">${review.helpful}</span>
+                    </button>
+                    <button onclick="reportReview(${review.id})" class="review-action-btn report" title="Report review">
+                        ⚠️ Report
+                    </button>
+                </div>
+            </div>
+        `;
+
+        reviewsGrid.appendChild(reviewCard);
+    });
+
+    // Update Load More Button
+    updateLoadMoreButton();
+}
+
+// Update Load More Button
+function updateLoadMoreButton() {
+    const btn = document.getElementById('loadMoreBtn');
+    if (!btn) return;
+    
+    if (displayedReviews >= reviewsDatabase.length) {
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        btn.innerText = 'All Reviews Loaded';
+    } else {
+        btn.disabled = false;
+        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        btn.innerText = 'Load More Reviews';
+    }
+}
+
+// Load More Reviews
+function loadMoreReviews() {
+    displayedReviews += 3;
+    renderReviews(displayedReviews);
+    showReviewToast('✓ More reviews loaded!');
+    
+    // Scroll to reviews section
+    setTimeout(() => {
+        document.getElementById('customerReviews').scrollIntoView({ behavior: 'smooth' });
+    }, 200);
+}
+
+// Mark Review as Helpful
+function markHelpful(reviewId) {
+    const btn = document.getElementById(`helpful-btn-${reviewId}`);
+    const countSpan = document.getElementById(`helpful-count-${reviewId}`);
+    const review = reviewsDatabase.find(r => r.id === reviewId);
+
+    if (!review) return;
+
+    if (!helpfulTracking[reviewId]) {
+        helpfulTracking[reviewId] = true;
+        review.helpful += 1;
+        countSpan.textContent = review.helpful;
+        btn.classList.add('active');
+        showReviewToast(`✓ Thank you! Review marked as helpful.`);
+    } else {
+        helpfulTracking[reviewId] = false;
+        review.helpful -= 1;
+        countSpan.textContent = review.helpful;
+        btn.classList.remove('active');
+        showReviewToast(`Review helpful mark removed.`);
+    }
+}
+
+// Report Review
+function reportReview(reviewId) {
+    const review = reviewsDatabase.find(r => r.id === reviewId);
+    if (!review) return;
+    
+    showReviewToast(`✓ Thank you! Review reported.`);
+    console.log(`Review ${reviewId} reported by user`);
+}
+
+// Initialize Helpful Tracking
+function initializeHelpfulTracking() {
+    reviewsDatabase.forEach(review => {
+        helpfulTracking[review.id] = false;
+    });
+}
+
+// Toast Notification
+function showReviewToast(message) {
+    const toast = document.getElementById('reviewToast');
+    const toastText = document.getElementById('reviewToastText');
+    if (!toast) return;
+    
+    toastText.textContent = message;
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+// Update Review Stats
+function updateReviewStats() {
+    const avgRatingEl = document.getElementById('avgRating');
+    const totalReviewsEl = document.getElementById('totalReviews');
+    
+    if (!avgRatingEl || !totalReviewsEl) return;
+
+    const totalRating = reviewsDatabase.reduce((sum, review) => sum + review.rating, 0);
+    const avgRating = (totalRating / reviewsDatabase.length).toFixed(1);
+    const totalReviews = reviewsDatabase.length;
+
+    avgRatingEl.textContent = avgRating;
+    totalReviewsEl.textContent = totalReviews.toLocaleString();
+}
+
+// Filter Reviews by Rating
+function filterByRating(rating) {
+    const filtered = reviewsDatabase.filter(review => review.rating >= rating);
+    displayedReviews = Math.min(3, filtered.length);
+    
+    const grid = document.getElementById('reviewsGrid');
+    if (grid) {
+        grid.innerHTML = '';
+        filtered.slice(0, displayedReviews).forEach((review, index) => {
+            const reviewCard = document.createElement('div');
+            reviewCard.className = 'review-card';
+            const starClass = `${review.rating}-stars`;
+
+            reviewCard.innerHTML = `
+                <div>
+                    <div class="review-meta">
+                        <div class="star-rating ${starClass}"></div>
+                        <span class="text-brand-400 font-semibold">${review.date}</span>
+                    </div>
+                    
+                    <span class="verified-badge">
+                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                        </svg>
+                        Verified Purchase
+                    </span>
+
+                    <h4 class="review-headline">${review.headline}</h4>
+                    <p class="review-text">${review.text}</p>
+                </div>
+
+                <div>
+                    <div class="customer-info">
+                        <div class="customer-avatar">${review.avatar}</div>
+                        <div>
+                            <div class="customer-name">${review.name}</div>
+                            <div class="customer-title">${review.title}</div>
+                        </div>
+                    </div>
+
+                    <div class="review-actions">
+                        <button onclick="markHelpful(${review.id})" id="helpful-btn-${review.id}" class="review-action-btn" title="Mark as helpful">
+                            👍 <span id="helpful-count-${review.id}">${review.helpful}</span>
+                        </button>
+                        <button onclick="reportReview(${review.id})" class="review-action-btn report" title="Report review">
+                            ⚠️ Report
+                        </button>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(reviewCard);
+        });
+    }
+}
+
+// Search Reviews
+function searchReviews(query) {
+    const filtered = reviewsDatabase.filter(review => 
+        review.text.toLowerCase().includes(query.toLowerCase()) ||
+        review.name.toLowerCase().includes(query.toLowerCase()) ||
+        review.headline.toLowerCase().includes(query.toLowerCase())
+    );
+    displayedReviews = filtered.length;
+    
+    const grid = document.getElementById('reviewsGrid');
+    if (grid) {
+        grid.innerHTML = '';
+        filtered.forEach((review, index) => {
+            const reviewCard = document.createElement('div');
+            reviewCard.className = 'review-card';
+            const starClass = `${review.rating}-stars`;
+
+            reviewCard.innerHTML = `
+                <div>
+                    <div class="review-meta">
+                        <div class="star-rating ${starClass}"></div>
+                        <span class="text-brand-400 font-semibold">${review.date}</span>
+                    </div>
+                    
+                    <span class="verified-badge">
+                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                        </svg>
+                        Verified Purchase
+                    </span>
+
+                    <h4 class="review-headline">${review.headline}</h4>
+                    <p class="review-text">${review.text}</p>
+                </div>
+
+                <div>
+                    <div class="customer-info">
+                        <div class="customer-avatar">${review.avatar}</div>
+                        <div>
+                            <div class="customer-name">${review.name}</div>
+                            <div class="customer-title">${review.title}</div>
+                        </div>
+                    </div>
+
+                    <div class="review-actions">
+                        <button onclick="markHelpful(${review.id})" id="helpful-btn-${review.id}" class="review-action-btn">
+                            👍 <span id="helpful-count-${review.id}">${review.helpful}</span>
+                        </button>
+                        <button onclick="reportReview(${review.id})" class="review-action-btn report">
+                            ⚠️ Report
+                        </button>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(reviewCard);
+        });
+    }
+}
+
+// ========================================
 // NEWSLETTER
 // ========================================
 
