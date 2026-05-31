@@ -258,6 +258,61 @@
         </div>
     </section>
 
+    <!-- CUSTOMER REVIEWS SECTION -->
+    <section id="customerReviews" class="bg-brand-50 py-16 md:py-24 border-t border-brand-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Section Header -->
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-brand-500 text-xs sm:text-sm tracking-[0.25em] uppercase font-bold">Loved By Our Patrons</span>
+                <h2 class="serif-font text-3xl sm:text-4xl font-bold mt-3 text-brand-900">Real Reviews From Verified Buyers</h2>
+                <p class="text-brand-500 text-xs sm:text-sm mt-3">See what our happy customers are saying about Lolita collections.</p>
+                <div class="w-16 h-1 bg-brand-400 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Reviews Grid -->
+            <div id="reviewsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <!-- Reviews will be dynamically loaded here -->
+            </div>
+
+            <!-- Load More Button -->
+            <div class="text-center">
+                <button onclick="loadMoreReviews()" id="loadMoreBtn" class="bg-brand-500 hover:bg-brand-600 text-white px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-md">
+                    Load More Reviews
+                </button>
+            </div>
+
+            <!-- Review Stats Summary -->
+            <div class="mt-16 bg-white rounded-2xl p-8 md:p-12 border border-brand-100 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div>
+                    <div class="flex justify-center mb-3">
+                        <span class="text-3xl font-bold text-brand-900" id="avgRating">4.8</span>
+                        <span class="text-brand-500 ml-2">/ 5.0</span>
+                    </div>
+                    <div class="text-amber-500 text-lg mb-2">★★★★★</div>
+                    <p class="text-xs text-brand-500 font-semibold">Average Rating</p>
+                </div>
+                <div>
+                    <h4 class="text-3xl font-bold text-brand-900 mb-2" id="totalReviews">1,248</h4>
+                    <p class="text-xs text-brand-500 font-semibold">Verified Reviews</p>
+                    <p class="text-xs text-brand-400 mt-2">From genuine customers</p>
+                </div>
+                <div>
+                    <h4 class="text-3xl font-bold text-brand-900 mb-2">98%</h4>
+                    <p class="text-xs text-brand-500 font-semibold">Positive Feedback</p>
+                    <p class="text-xs text-brand-400 mt-2">Would recommend</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- REVIEW TOAST NOTIFICATION -->
+    <div id="reviewToast" class="fixed bottom-6 right-6 z-50 bg-brand-900 text-white px-6 py-3 shadow-xl rounded-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center space-x-3 pointer-events-none">
+        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span id="reviewToastText" class="text-xs tracking-wider font-semibold">Review action completed!</span>
+    </div>
+
     <!-- FOOTER -->
     <footer class="bg-brand-950 text-brand-200 pt-16 pb-8 border-t border-brand-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
