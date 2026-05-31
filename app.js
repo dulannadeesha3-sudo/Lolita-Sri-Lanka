@@ -1,8 +1,8 @@
 /* ========================================
-   LOLITA BOUTIQUE - MAIN APPLICATION JS
+   LOLITA ECOMMERCE - MAIN APPLICATION
    ======================================== */
 
-// --- PRODUCTS ARRAY ---
+// PRODUCTS DATABASE
 const products = [
     {
         id: 1,
@@ -11,7 +11,7 @@ const products = [
         price: 45000,
         rating: 4.9,
         image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80",
-        description: "Luxurious royal pure silk saree embellished with elegant gold zari embroidery work. The finest craftsmanship for prestigious celebrations across Sri Lanka.",
+        description: "Luxurious royal pure silk saree embellished with elegant gold zari embroidery work.",
         sizes: ["Standard"]
     },
     {
@@ -21,7 +21,7 @@ const products = [
         price: 14500,
         rating: 4.7,
         image: "https://images.unsplash.com/photo-1596783074918-c84cb06531ca?auto=format&fit=crop&w=600&q=80",
-        description: "Premium breathable pure linen featuring delicate minimalist floral prints. Designed elegantly for Sri Lanka's high-temperature tropical climate.",
+        description: "Premium breathable pure linen featuring delicate minimalist floral prints.",
         sizes: ["S", "M", "L", "XL"]
     },
     {
@@ -31,7 +31,7 @@ const products = [
         price: 8900,
         rating: 4.6,
         image: "https://images.unsplash.com/photo-1608748010899-18f300247112?auto=format&fit=crop&w=600&q=80",
-        description: "Crafted out of 100% fine cotton featuring custom organic handblock printing. A chic choice for executive wear and daily upscale comfort.",
+        description: "Crafted out of 100% fine cotton featuring custom organic handblock printing.",
         sizes: ["M", "L", "XL", "XXL"]
     },
     {
@@ -41,7 +41,7 @@ const products = [
         price: 12000,
         rating: 4.8,
         image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80",
-        description: "Signature pearl drop choker necklace set. Curated to complement traditional drapes and contemporary high-neck dresses elegantly.",
+        description: "Signature pearl drop choker necklace set curated to complement traditional drapes.",
         sizes: ["One Size"]
     },
     {
@@ -51,7 +51,7 @@ const products = [
         price: 38000,
         rating: 5.0,
         image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=600&q=80",
-        description: "Stunning silk saree highlighting original handcrafted Sri Lankan batik print. A gorgeous statement of authentic island cultural heritage.",
+        description: "Stunning silk saree highlighting original handcrafted Sri Lankan batik print.",
         sizes: ["Standard"]
     },
     {
@@ -61,7 +61,7 @@ const products = [
         price: 16500,
         rating: 4.5,
         image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=600&q=80",
-        description: "Ethereal lavender colored flowing maxi dress. Offers a highly relaxed fit perfect for upscale garden tea parties or tropical evenings.",
+        description: "Ethereal lavender colored flowing maxi dress for tropical evenings.",
         sizes: ["S", "M", "L"]
     },
     {
@@ -71,7 +71,7 @@ const products = [
         price: 11500,
         rating: 4.8,
         image: "https://images.unsplash.com/photo-1612336307429-8a898d10e223?auto=format&fit=crop&w=600&q=80",
-        description: "Elegant traditional embroidery meticulously handwoven on premium cool georgette fabric. Breathable, delicate, and deeply sophisticated.",
+        description: "Elegant traditional embroidery handwoven on premium cool georgette fabric.",
         sizes: ["M", "L", "XL"]
     },
     {
@@ -81,17 +81,24 @@ const products = [
         price: 6500,
         rating: 4.7,
         image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=600&q=80",
-        description: "Intricately finished premium Kundan jhumka statement earrings with delicate dangling micro-pearls. Ideal for cultural festivities.",
+        description: "Intricately finished premium Kundan jhumka statement earrings with dangling pearls.",
         sizes: ["One Size"]
     }
 ];
 
-// --- STATE VARIABLES ---
+// STATE VARIABLES
 let cart = [];
 let wishlist = [];
 let activeCategory = 'all';
 let currentSlide = 0;
 const totalSlides = 2;
+
+// PAGE INITIALIZATION
+window.onload = function() {
+    renderProducts();
+    updateSlider();
+    setupAutoSlide();
+};
 
 // ========================================
 // PRODUCT RENDERING
@@ -113,12 +120,12 @@ function renderProducts(productsList = products) {
         return;
     }
 
-    productsList.forEach(prod => {
+    productsList.forEach((prod, index) => {
         const isFavorited = wishlist.includes(prod.id);
         const heartClass = isFavorited ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart';
         
         const card = `
-            <div class="bg-white rounded-2xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 group border border-brand-100 flex flex-col justify-between">
+            <div class="bg-white rounded-2xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 group border border-brand-100 flex flex-col justify-between" style="animation: slideInUp 0.6s ease-out ${index * 0.1}s both;">
                 <div class="relative overflow-hidden bg-brand-50 aspect-3/4">
                     <img src="${prod.image}" alt="${prod.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                     
@@ -156,14 +163,14 @@ function renderProducts(productsList = products) {
                 </div>
             </div>
         `;
-        grid.insertAdjacentHTML('beforeend', card);
+        grid.innerHTML += card;
     });
 
     countText.innerText = `Showing ${productsList.length} premium items`;
 }
 
 // ========================================
-// CATEGORY FILTERING
+// FILTERING & SEARCHING
 // ========================================
 
 function filterCategory(category) {
@@ -190,10 +197,6 @@ function filterCategoryMobile(category) {
     scrollToProducts();
 }
 
-// ========================================
-// SEARCH FUNCTIONALITY
-// ========================================
-
 function searchProducts() {
     const query = document.getElementById('searchInput').value.toLowerCase();
     const filtered = products.filter(p => 
@@ -211,10 +214,6 @@ function searchProductsMobile() {
     );
     renderProducts(filtered);
 }
-
-// ========================================
-// SORTING
-// ========================================
 
 function sortProducts() {
     const sortBy = document.getElementById('sortSelect').value;
@@ -296,7 +295,9 @@ function setSlide(num) {
     updateSlider();
 }
 
-setInterval(nextSlide, 7000);
+function setupAutoSlide() {
+    setInterval(nextSlide, 7000);
+}
 
 // ========================================
 // UI CONTROLS
@@ -323,12 +324,29 @@ function toggleMobileSearch() {
     bar.classList.toggle('hidden');
 }
 
+function toggleCartDrawer() {
+    const drawer = document.getElementById('cartDrawer');
+    const content = document.getElementById('cartDrawerContent');
+    if (drawer.classList.contains('hidden')) {
+        drawer.classList.remove('hidden');
+        setTimeout(() => {
+            content.classList.remove('translate-x-full');
+        }, 10);
+        updateCartUI();
+    } else {
+        content.classList.add('translate-x-full');
+        setTimeout(() => {
+            drawer.classList.add('hidden');
+        }, 300);
+    }
+}
+
 function scrollToProducts() {
     document.getElementById('productsSection').scrollIntoView({ behavior: 'smooth' });
 }
 
 // ========================================
-// WISHLIST / FAVORITES
+// WISHLIST MANAGEMENT
 // ========================================
 
 function toggleWishlist(productId) {
@@ -338,10 +356,10 @@ function toggleWishlist(productId) {
 
     if (index > -1) {
         wishlist.splice(index, 1);
-        showToast(`Removed "${product.name}" from your favorites.`);
+        showToast(`Removed "${product.name}" from favorites.`);
     } else {
         wishlist.push(productId);
-        showToast(`Added "${product.name}" to your favorites!`, "success");
+        showToast(`Added "${product.name}" to favorites!`);
     }
 
     updateWishlistUI();
@@ -351,9 +369,7 @@ function toggleWishlist(productId) {
 
 function updateWishlistUI() {
     const badge = document.getElementById('wishlistCountBadge');
-    if (badge) {
-        badge.innerText = wishlist.length;
-    }
+    if (badge) badge.innerText = wishlist.length;
 }
 
 function showWishlistModal() {
@@ -366,7 +382,7 @@ function showWishlistModal() {
             <div class="text-center py-12">
                 <i class="fa-regular fa-heart text-5xl text-brand-200 mb-4 block"></i>
                 <p class="text-brand-500 font-semibold text-sm">Your Wishlist is empty.</p>
-                <p class="text-brand-400 text-xs mt-1">Tap the heart icons on designs to save them here.</p>
+                <p class="text-brand-400 text-xs mt-1">Tap heart icons to save your favorites.</p>
             </div>
         `;
     } else {
@@ -374,7 +390,7 @@ function showWishlistModal() {
             const prod = products.find(p => p.id === id);
             if (prod) {
                 const itemHtml = `
-                    <div class="flex items-center justify-between border-b border-brand-100 pb-3 last:border-0 last:pb-0">
+                    <div class="flex items-center justify-between border-b border-brand-100 pb-3 last:border-0">
                         <div class="flex items-center space-x-3">
                             <img src="${prod.image}" alt="${prod.name}" class="w-12 h-16 object-cover rounded-lg bg-brand-50 border border-brand-100">
                             <div class="max-w-[180px]">
@@ -418,7 +434,7 @@ function addToCart(productId, size) {
     }
 
     updateCartUI();
-    showToast(`${product.name} (${size}) added to your bag!`);
+    showToast(`${product.name} added to bag!`);
 }
 
 function updateCartQuantity(productId, size, change) {
@@ -437,23 +453,6 @@ function removeItemFromCart(productId, size) {
     cart = cart.filter(i => !(i.product.id === productId && i.size === size));
     updateCartUI();
     showToast("Item removed from bag.");
-}
-
-function toggleCartDrawer() {
-    const drawer = document.getElementById('cartDrawer');
-    const content = document.getElementById('cartDrawerContent');
-    if (drawer.classList.contains('hidden')) {
-        drawer.classList.remove('hidden');
-        setTimeout(() => {
-            content.classList.remove('translate-x-full');
-        }, 10);
-        updateCartUI();
-    } else {
-        content.classList.add('translate-x-full');
-        setTimeout(() => {
-            drawer.classList.add('hidden');
-        }, 300);
-    }
 }
 
 function updateCartUI() {
@@ -539,7 +538,7 @@ function closeCheckoutModal() {
 }
 
 // ========================================
-// QUICK VIEW MODAL
+// QUICK VIEW
 // ========================================
 
 function openQuickView(productId) {
@@ -559,7 +558,7 @@ function openQuickView(productId) {
                 <div>
                     <div class="flex items-center text-amber-500 text-sm mb-2">
                         <i class="fa-solid fa-star mr-1"></i>
-                        <span class="font-bold">${prod.rating} / 5.0 Rating</span>
+                        <span class="font-bold">${prod.rating} / 5.0</span>
                     </div>
                     <h2 class="serif-font text-2.5xl sm:text-3.5xl font-bold text-brand-950">${prod.name}</h2>
                     <p class="text-xs text-brand-400 mt-1 uppercase tracking-widest font-bold">${prod.category}</p>
@@ -621,360 +620,3 @@ function subscribeNewsletter(event) {
     showToast("Successfully subscribed to newsletter. Thank you!");
     event.target.reset();
 }
-
-// ========================================
-// AI CHAT ASSISTANT
-// ========================================
-
-function toggleAiChat() {
-    const chatbox = document.getElementById('aiChatbox');
-    chatbox.classList.toggle('hidden');
-}
-
-function appendChatMessage(sender, text) {
-    const messagesContainer = document.getElementById('chatMessages');
-    const msgDiv = document.createElement('div');
-    
-    if (sender === 'user') {
-        msgDiv.className = 'flex items-start justify-end space-x-2.5';
-        msgDiv.innerHTML = `
-            <div class="bg-brand-500 text-white p-3 rounded-2xl rounded-tr-none shadow-xs text-brand-50 max-w-[80%]">
-                ${text}
-            </div>
-            <div class="w-7 h-7 rounded-full bg-brand-900 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-user"></i></div>
-        `;
-    } else {
-        msgDiv.className = 'flex items-start space-x-2.5';
-        msgDiv.innerHTML = `
-            <div class="w-7 h-7 rounded-full bg-brand-200 flex items-center justify-center text-brand-900 text-xs"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-            <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-xs text-brand-800 max-w-[80%]">
-                ${text}
-            </div>
-        `;
-    }
-    
-    messagesContainer.appendChild(msgDiv);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-}
-
-async function sendAiMessage(event) {
-    event.preventDefault();
-    const input = document.getElementById('aiInput');
-    const messageText = input.value.trim();
-    if (!messageText) return;
-
-    appendChatMessage('user', messageText);
-    input.value = "";
-
-    const loaderDiv = document.createElement('div');
-    loaderDiv.className = 'flex items-start space-x-2.5';
-    loaderDiv.innerHTML = `
-        <div class="w-7 h-7 rounded-full bg-brand-200 flex items-center justify-center text-brand-900 text-xs"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-        <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-xs text-brand-400 max-w-[80%] flex items-center space-x-2">
-            <span class="w-2 h-2 rounded-full bg-brand-400 animate-bounce"></span>
-            <span class="w-2 h-2 rounded-full bg-brand-400 animate-bounce" style="animation-delay: 0.2s"></span>
-            <span class="w-2 h-2 rounded-full bg-brand-400 animate-bounce" style="animation-delay: 0.4s"></span>
-        </div>
-    `;
-    const container = document.getElementById('chatMessages');
-    container.appendChild(loaderDiv);
-    container.scrollTop = container.scrollHeight;
-
-    try {
-        appendChatMessage('ai', "Thank you for reaching out! Our AI assistant is here to help you find the perfect pieces from our Lolita collection. How can I assist you with your fashion needs today?");
-        loaderDiv.remove();
-    } catch (error) {
-        loaderDiv.remove();
-        appendChatMessage('ai', "I'm having a bit of trouble connecting. Please try again shortly!");
-    }
-
-/* ========================================
-   CUSTOMER REVIEWS SECTION - JAVASCRIPT
-   ======================================== */
-
-// Review Data Database
-const reviewsDatabase = [
-    {
-        id: 1,
-        name: "Anita S.",
-        title: "Verified Buyer",
-        location: "Colombo",
-        rating: 5,
-        text: "I bought a few designer kurtis from Lolita. The fabric is incredibly soft and premium. It gives a luxurious feel!",
-        avatar: "AS",
-        date: "2 weeks ago",
-        helpful: 142,
-        helpful_count: 142
-    },
-    {
-        id: 2,
-        name: "Pooja M.",
-        title: "Wedding Shopper",
-        location: "Kandy",
-        rating: 5,
-        text: "The rose gold zari embroidery on my wedding saree matched the elegant rose gold tone of the brand logo beautifully. Absolute masterpiece.",
-        avatar: "PM",
-        date: "1 month ago",
-        helpful: 89,
-        helpful_count: 89
-    },
-    {
-        id: 3,
-        name: "Rupesh D.",
-        title: "Loyal Customer",
-        location: "Galle",
-        rating: 5,
-        text: "Super fast delivery and elegant premium packaging. The online support team is extremely cooperative. Best luxury experience!",
-        avatar: "RD",
-        date: "3 weeks ago",
-        helpful: 156,
-        helpful_count: 156
-    },
-    {
-        id: 4,
-        name: "Kavya N.",
-        title: "Fashion Enthusiast",
-        location: "Negombo",
-        rating: 5,
-        text: "The saree quality is exceptional. The colors are vibrant and the weaving is impeccable. I've already recommended Lolita to my friends.",
-        avatar: "KN",
-        date: "4 days ago",
-        helpful: 67,
-        helpful_count: 67
-    },
-    {
-        id: 5,
-        name: "Meera T.",
-        title: "Party Planner",
-        location: "Colombo",
-        rating: 5,
-        text: "Perfect for special occasions! The kurtis drape beautifully and the embroidery work is detailed. Worth every penny!",
-        avatar: "MT",
-        date: "1 week ago",
-        helpful: 98,
-        helpful_count: 98
-    },
-    {
-        id: 6,
-        name: "Deepak L.",
-        title: "Gift Buyer",
-        location: "Matara",
-        rating: 5,
-        text: "Bought sarees for my wife and mother. Both loved the quality and design. The packaging made it feel extra special.",
-        avatar: "DL",
-        date: "2 days ago",
-        helpful: 45,
-        helpful_count: 45
-    }
-];
-
-let displayedReviews = 3;
-let helpfulTracking = {};
-
-// Initialize Reviews on Page Load
-window.addEventListener('DOMContentLoaded', function() {
-    renderReviews(displayedReviews);
-    initializeHelpfulTracking();
-});
-
-// Render Reviews Function
-function renderReviews(count) {
-    const reviewsGrid = document.getElementById('reviewsGrid');
-    reviewsGrid.innerHTML = '';
-
-    const reviewsToDisplay = reviewsDatabase.slice(0, count);
-
-    reviewsToDisplay.forEach((review, index) => {
-        const reviewCard = document.createElement('div');
-        reviewCard.className = 'review-card';
-        reviewCard.style.animationDelay = `${index * 0.1}s`;
-
-        const starClass = `five-stars`;
-
-        reviewCard.innerHTML = `
-            <div class="review-header">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="star-rating ${starClass}"></div>
-                    <span class="text-[10px] text-gray-400 font-medium">${review.date}</span>
-                </div>
-                <span class="verified-badge">
-                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M10.293 15.707a1 1 0 010-1.414L12.586 12 10.293 9.707a1 1 0 111.414-1.414l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414 0z"/>
-                        <path fill-rule="evenodd" d="M4 12a8 8 0 100 16 8 8 0 000-16zm3.707 3.293a1 1 0 010 1.414L9.414 16l-1.707 1.707a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 0z" clip-rule="evenodd"/>
-                    </svg>
-                    Verified Purchase
-                </span>
-            </div>
-
-            <p class="review-text">${review.text}</p>
-
-            <div class="customer-info">
-                <div class="customer-avatar">${review.avatar}</div>
-                <div>
-                    <div class="customer-name">${review.name}</div>
-                    <div class="customer-title">${review.title}</div>
-                </div>
-            </div>
-
-            <div class="review-actions">
-                <button onclick="markHelpful(${review.id})" id="helpful-btn-${review.id}" class="review-action-btn" title="Mark this review as helpful">
-                    👍 Helpful (<span id="helpful-count-${review.id}">${review.helpful_count}</span>)
-                </button>
-                <button onclick="reportReview(${review.id})" class="review-action-btn" title="Report this review">
-                    ⚠️ Report
-                </button>
-            </div>
-        `;
-
-        reviewsGrid.appendChild(reviewCard);
-    });
-}
-
-// Mark Review as Helpful
-function markHelpful(reviewId) {
-    const btn = document.getElementById(`helpful-btn-${reviewId}`);
-    const countSpan = document.getElementById(`helpful-count-${reviewId}`);
-    const review = reviewsDatabase.find(r => r.id === reviewId);
-
-    if (!helpfulTracking[reviewId]) {
-        helpfulTracking[reviewId] = true;
-        review.helpful_count += 1;
-        countSpan.textContent = review.helpful_count;
-        
-        btn.classList.add('active');
-        showToast(`✓ Thank you! Review marked as helpful.`);
-    } else {
-        helpfulTracking[reviewId] = false;
-        review.helpful_count -= 1;
-        countSpan.textContent = review.helpful_count;
-        
-        btn.classList.remove('active');
-        showToast(`Review unhelpful mark removed.`);
-    }
-}
-
-// Report Review Function
-function reportReview(reviewId) {
-    const review = reviewsDatabase.find(r => r.id === reviewId);
-    showToast(`✓ Thank you! Review by ${review.name} has been reported.`);
-    
-    // In real application, you would send this to backend
-    console.log(`Review ${reviewId} reported by user`);
-}
-
-// Load More Reviews
-function loadMoreReviews() {
-    displayedReviews += 3;
-    
-    if (displayedReviews >= reviewsDatabase.length) {
-        displayedReviews = reviewsDatabase.length;
-        document.querySelector('button[onclick="loadMoreReviews()"]').disabled = true;
-        document.querySelector('button[onclick="loadMoreReviews()"]').textContent = 'All Reviews Loaded';
-    }
-    
-    renderReviews(displayedReviews);
-    showToast(`✓ More reviews loaded!`);
-}
-
-// Initialize Helpful Tracking
-function initializeHelpfulTracking() {
-    reviewsDatabase.forEach(review => {
-        helpfulTracking[review.id] = false;
-    });
-}
-
-// Toast Notification System
-function showToast(message) {
-    const toast = document.getElementById('reviewToast');
-    const toastText = document.getElementById('reviewToastText');
-    
-    toastText.textContent = message;
-    toast.classList.add('show');
-    
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3000);
-}
-
-// Search Reviews by Text (Optional)
-function searchReviews(query) {
-    const filtered = reviewsDatabase.filter(review => 
-        review.text.toLowerCase().includes(query.toLowerCase()) ||
-        review.name.toLowerCase().includes(query.toLowerCase())
-    );
-    renderReviews(filtered.length);
-}
-
-// Filter Reviews by Rating (Optional)
-function filterByRating(rating) {
-    const filtered = reviewsDatabase.filter(review => review.rating >= rating);
-    renderReviews(filtered.length);
-}
-
-// Sort Reviews
-function sortReviews(sortBy) {
-    let sorted = [...reviewsDatabase];
-    
-    switch(sortBy) {
-        case 'helpful':
-            sorted.sort((a, b) => b.helpful_count - a.helpful_count);
-            break;
-        case 'recent':
-            sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
-            break;
-        case 'rating':
-            sorted.sort((a, b) => b.rating - a.rating);
-            break;
-        default:
-            break;
-    }
-    
-    reviewsDatabase.length = 0;
-    reviewsDatabase.push(...sorted);
-    renderReviews(displayedReviews);
-}
-
-// Export Reviews Data (Admin Feature)
-function exportReviews() {
-    const dataStr = JSON.stringify(reviewsDatabase, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'lolita-reviews.json';
-    link.click();
-}
-
-// Get Average Rating
-function getAverageRating() {
-    const total = reviewsDatabase.reduce((sum, review) => sum + review.rating, 0);
-    return (total / reviewsDatabase.length).toFixed(1);
-}
-
-// Get Total Reviews Count
-function getTotalReviewsCount() {
-    return reviewsDatabase.length;
-}
-
-// Display Summary Stats
-function displayReviewStats() {
-    console.log({
-        totalReviews: getTotalReviewsCount(),
-        averageRating: getAverageRating(),
-        verifiedPurchases: reviewsDatabase.length,
-        helpfulnessAverage: (reviewsDatabase.reduce((sum, r) => sum + r.helpful_count, 0) / reviewsDatabase.length).toFixed(0)
-    });
-}
-
-}
-
-// ========================================
-// INITIALIZATION
-// ========================================
-
-window.addEventListener('DOMContentLoaded', function() {
-    renderProducts();
-    updateSlider();
-    updateWishlistUI();
-});
-
